@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>BaseWgt</class>
+ <widget class="QGroupBox" name="BaseWgt">
+ </widget>
+ <resources/>
+ <connections/>
+</ui>
