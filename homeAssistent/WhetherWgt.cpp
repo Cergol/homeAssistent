@@ -6,15 +6,47 @@
 #include <QNetworkRequest>
 #include <QDebug>
 #include <QRegularExpression>
+#include <QDateTime>
+#include <QMenu>
+#include <QtConcurrent/QtConcurrent>
+#include <QPushButton>
+
+const int WhetherWgt::MS2S = 60 * 1000;
 
 WhetherWgt::WhetherWgt(QWidget *parent)
-    : BaseWgt("Whether", parent)
+    : BaseWgt(tr("Whether"), parent)
     , ui(new Ui::WhetherWgt) {
 
     ui->setupUi(this);
     updateWhether();
     _update_timer = new QTimer();
     connect(_update_timer, &QTimer::timeout, this, &WhetherWgt::updateWhether);
+
+    connect(this, &WhetherWgt::customContextMenuRequested,
+            this, &WhetherWgt::showCustomMenu);
+
+    connect(ui->actionUpdate_whether, &QAction::triggered,
+            this, &WhetherWgt::updateWhether);
+
+    connect (ui->actionUpdate_timer, &QAction::triggered,
+            this, [=](){
+
+                ChangeTimer dlg;
+                dlg.setTimer(_update_timer->interval() / MS2S);
+                if (dlg.exec()) {
+
+                    setTimer(dlg.getTime() * MS2S);
+                }
+            });
+
+    connect (this, &WhetherWgt::parseEnd, [=](){
+
+        QDateTime current = QDateTime::currentDateTime();
+        ui->lbl_last_update->setText(QChar(0x21BA) + current.toString(" HH:mm"));
+        ui->lbl_tempreture->setText(_cur_whether);
+        ui->lbl_condition->setText(_whether_condition);
+        ui->lbl_precipitation->setText(_whether_precipitation);
+    });
 }
 
 WhetherWgt::~WhetherWgt() {
@@ -31,67 +63,123 @@ void WhetherWgt::setTimer(int time_ms) {
 void WhetherWgt::updateWhether() {
 
     QNetworkAccessManager *manager = new QNetworkAccessManager();
+    QNetworkRequest req(QUrl("https://yandex.ru/pogoda/ru?lon=30.3799&lat=60.0161"));
 
+    connect(manager, &QNetworkAccessManager::finished,
+            [=](QNetworkReply *reply){
+
+                if (reply->error() == QNetworkReply::NoError) {
+                    QString html = QString::fromUtf8(reply->readAll());
+                    // ЗДЕСЬ ПАРСИНГ
+                    parsePage(html);
+
+                } else {
+                    qWarning() << "Ошибка:" << reply->errorString();
+                }
+                reply->deleteLater();
+                manager->deleteLater();
+
+            });
     // Подключаем сигнал завершения запроса к слоту
-    QObject::connect(manager, &QNetworkAccessManager::finished,
-                     [=](QNetworkReply *reply){
-                         if (reply->error() == QNetworkReply::NoError) {
-                             QString html = QString::fromUtf8(reply->readAll());
-                             // ЗДЕСЬ ПАРСИНГ
-                             parsePage(html);
-                         } else {
-                             qWarning() << "Ошибка:" << reply->errorString();
-                         }
-                         reply->deleteLater();
-                         manager->deleteLater();
 
-                         ui->label->setText(_cur_whether);
-                         ui->label_2->setText(_whether_like);
-                         ui->label_3->setText(_whether_rain);
-                     });
-
-    // Отправляем GET запрос
-    manager->get(QNetworkRequest(QUrl("https://yandex.ru/pogoda/ru?lon=30.3799&lat=60.0161")));
+    manager->get(req);
 }
+
+
+void WhetherWgt::showCustomMenu(const QPoint &pos) {
+
+    QMenu contextMenu(tr("Context Menu"), this);
+
+    contextMenu.addAction(ui->actionUpdate_timer);
+    contextMenu.addAction(ui->actionUpdate_whether);
+
+    // Display the menu at the cursor's global position
+    contextMenu.exec(this->mapToGlobal(pos));
+}
+
 
 void WhetherWgt::parsePage(const QString& html_page) {
 
-    QMutexLocker locker(&_mutex);
+    QtConcurrent::run([=](){
 
-    QRegularExpression degree_sign(R"(<span class="AppFactTemperature_sign_.*">([+|-])</span>)");
-    QRegularExpressionMatch match = degree_sign.match(html_page);
-    if (match.hasMatch()) {
-        QString matched = match.captured(1);
-        _cur_whether = matched;
-        qDebug() << "\nСодержимое:" << match.captured(0);
-    }
+        QMutexLocker locker(&_mutex);
 
-    QRegularExpression degree(R"(<span class="AppFactTemperature_value_.+?">(\d+)<\/span>)");
-    match = degree.match(html_page);
-    if (match.hasMatch()) {
-        QString matched = match.captured(1);
-        _cur_whether += matched;
-        qDebug() << "\nСодержимое:" << match.captured(0);
-    }
-
-    QRegularExpression warning(R"(<div class="AppFact_warning__.+?">(.*?<\/div>.*?<\/div>.*?<\/div>.*?<\/div>.*?<\/div>.*?<\/div>))");
-    match = warning.match(html_page);
-    if (match.hasMatch()) {
-        QString matched = match.captured(1);
-
-        QRegularExpression first_warn(R"(<span class="AppFact_warning__first_text_.*">(.+)<\/span>)");
-        QRegularExpressionMatch match_warn = first_warn.match(matched);
-        if (match_warn.hasMatch()) {
-            QString matched_first = match_warn.captured(1);
-            _whether_like = matched_first.trimmed();
-            qDebug() << "\nСодержимое _whether_like:" << match_warn.captured(0);
+        QRegularExpression degree_sign(R"(<span class=\\?"AppFactTemperature_sign_.*">([+|-])</span>)");
+        QRegularExpressionMatch match = degree_sign.match(html_page);
+        if (match.hasMatch()) {
+            QString matched = match.captured(1);
+            _cur_whether = matched;
+            //qDebug() << "\nСодержимое:" << match.captured(0);
         }
-        QRegularExpression sec_warn(R"(<div class="AppFact_warning__second_.*">(.+)<\/div>)");
-        match_warn = sec_warn.match(matched);
-        if (match_warn.hasMatch()) {
-            QString matched_sec = match_warn.captured(1);
-            _whether_rain = matched_sec.trimmed();
-            qDebug() << "\nСодержимое _whether_rain:" << match_warn.captured(0);
+
+        QRegularExpression degree(R"(<span class=\\?"AppFactTemperature_value_.+?">(\d+)<\/span>)");
+        match = degree.match(html_page);
+        if (match.hasMatch()) {
+            QString matched = match.captured(1);
+            _cur_whether += matched;
+            //qDebug() << "\nСодержимое:" << match.captured(0);
         }
-    }
+
+        QRegularExpression warning(R"(<div class=\\?"AppFact_warning__.+?">(.*?<\/div>.*?<\/div>.*?<\/div>.*?<\/div>.*?<\/div>.*?<\/div>))");
+        match = warning.match(html_page);
+        if (match.hasMatch()) {
+            QString matched = match.captured(1);
+
+            QRegularExpression first_warn(R"(<span class=\\?"AppFact_warning__first_text_.*?">(.+?)<\/span>)");
+            QRegularExpressionMatch match_warn = first_warn.match(matched);
+            if (match_warn.hasMatch()) {
+                QString matched_first = match_warn.captured(1);
+                _whether_condition = matched_first.trimmed();
+                //qDebug() << "\nСодержимое _whether_like:" << match_warn.captured(0);
+            }
+            QRegularExpression sec_warn(R"(<div class=\\?"AppFact_warning__second_.*?">(.+?)<\/div>)");
+            match_warn = sec_warn.match(matched);
+            if (match_warn.hasMatch()) {
+                QString matched_sec = match_warn.captured(1);
+                _whether_precipitation = matched_sec.trimmed();
+                //qDebug() << "\nСодержимое _whether_rain:" << match_warn.captured(0);
+            }
+        }
+        emit parseEnd();
+    });
+}
+
+ChangeTimer::ChangeTimer(QWidget *parent):
+    QDialog(parent) {
+
+    setWindowTitle(tr("Change timer"));
+
+    _timer_dial = new QDial(this);
+    _timer_dial->setRange(5, 60);
+    _timer_dial->setNotchesVisible(true);
+    _timer_dial->setWrapping(true);
+
+    _lbl = new QLabel(this);
+    _lbl->setAlignment(Qt::AlignHCenter);
+
+    connect (_timer_dial, &QDial::valueChanged,
+            this, [=](int value){ _lbl->setText(QString::number(value) + " miutes");});
+
+    QVBoxLayout *lay = new QVBoxLayout(this);
+    lay->addWidget(_lbl);
+    lay->addWidget(_timer_dial);
+
+    QPushButton *button = new QPushButton(tr("Apply"), this);
+    lay->addWidget(button);
+
+    connect (button, &QPushButton::pressed, this, &QDialog::accept);
+    setLayout(lay);
+
+    //resize()
+}
+
+void ChangeTimer::setTimer(const int time) {
+
+    if(_timer_dial) _timer_dial->setValue(time);
+}
+
+int ChangeTimer::getTime() {
+
+    if(_timer_dial) return _timer_dial->value();
+    return 0;
 }

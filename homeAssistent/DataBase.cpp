@@ -144,6 +144,19 @@ std::vector<DataBase::SQLiteRow> DataBase::select(const std::string &table_name,
     return result;
 }
 
+bool DataBase::exec(const QString &sql) {
+
+    sqlite3_stmt* stmt;
+
+    if (sqlite3_prepare_v2(_db, sql.toStdString().c_str(), -1, &stmt, nullptr) != SQLITE_OK)
+        throw std::runtime_error(sqlite3_errmsg(_db));
+
+    int status = sqlite3_step(stmt);
+    sqlite3_finalize(stmt);
+
+    return status == SQLITE_DONE;
+}
+
 
 
 void DataBase::bindValue(sqlite3_stmt* stmt,

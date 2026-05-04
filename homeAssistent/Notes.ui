@@ -28,8 +28,32 @@
    </property>
    <item>
     <widget class="QTableWidget" name="table">
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Expanding" vsizetype="MinimumExpanding">
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
+     </property>
+     <property name="focusPolicy">
+      <enum>Qt::NoFocus</enum>
+     </property>
+     <property name="contextMenuPolicy">
+      <enum>Qt::CustomContextMenu</enum>
+     </property>
+     <property name="selectionBehavior">
+      <enum>QAbstractItemView::SelectRows</enum>
+     </property>
+     <property name="verticalScrollMode">
+      <enum>QAbstractItemView::ScrollPerPixel</enum>
+     </property>
+     <property name="horizontalScrollMode">
+      <enum>QAbstractItemView::ScrollPerPixel</enum>
+     </property>
+     <property name="sortingEnabled">
+      <bool>true</bool>
+     </property>
      <property name="columnCount">
-      <number>5</number>
+      <number>0</number>
      </property>
      <attribute name="horizontalHeaderStretchLastSection">
       <bool>true</bool>
@@ -37,30 +61,42 @@
      <attribute name="verticalHeaderVisible">
       <bool>false</bool>
      </attribute>
-     <column/>
-     <column/>
-     <column/>
-     <column/>
-     <column/>
     </widget>
    </item>
    <item>
-    <widget class="QPushButton" name="add_row">
+    <widget class="QPushButton" name="add_row_btn">
      <property name="text">
       <string>Add note</string>
      </property>
     </widget>
    </item>
   </layout>
+  <action name="actionDelete_note">
+   <property name="icon">
+    <iconset resource="resources.qrc">
+     <normaloff>:/notes/imgs/tresh.png</normaloff>:/notes/imgs/tresh.png</iconset>
+   </property>
+   <property name="text">
+    <string>Delete note</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+Del</string>
+   </property>
+   <property name="menuRole">
+    <enum>QAction::NoRole</enum>
+   </property>
+  </action>
  </widget>
  <customwidgets>
   <customwidget>
    <class>BaseWgt</class>
    <extends>QGroupBox</extends>
-   <header location="global">./BaseWgt.h</header>
+   <header>BaseWgt.h</header>
    <container>1</container>
   </customwidget>
  </customwidgets>
- <resources/>
+ <resources>
+  <include location="resources.qrc"/>
+ </resources>
  <connections/>
 </ui>

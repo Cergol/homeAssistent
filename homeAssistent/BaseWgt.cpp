@@ -16,7 +16,7 @@ BaseWgt::BaseWgt(const QString& name, QWidget *parent)
         }
         QGroupBox::title {
             subcontrol-origin: margin;
-            subcontrol-position: top center;
+            subcontrol-position: top left;
             padding: 0 5px;
         }
     )");

@@ -1,0 +1,12 @@
+<RCC>
+    <qresource prefix="/notes">
+        <file>imgs/tresh.png</file>
+    </qresource>
+    <qresource prefix="/whether">
+        <file>imgs/timer.png</file>
+        <file>imgs/update.png</file>
+    </qresource>
+    <qresource prefix="/tr">
+        <file>translations/homeAssistent_ru.qm</file>
+    </qresource>
+</RCC>

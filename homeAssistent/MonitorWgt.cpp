@@ -13,14 +13,18 @@
 #endif
 
 MonitorWgt::MonitorWgt(QWidget *parent)
-    : BaseWgt("Monitor", parent)
+    : BaseWgt(tr("Monitor"), parent)
     , ui(new Ui::MonitorWgt) {
 
     ui->setupUi(this);
+    connect(ui->dial, &QDial::valueChanged,
+            this, [=](int value){
+        ui->label->setText(QString::number(value));
+        setMonitorBrightness(uint8_t(value));
+    });
+
     int cur_bright = getCurentBrightPers();
     ui->dial->setValue(cur_bright);
-    connect(ui->dial, &QDial::valueChanged, this, [=](int value){setMonitorBrightness(uint8_t(value));});
-
 }
 
 

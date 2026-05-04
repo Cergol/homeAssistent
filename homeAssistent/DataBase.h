@@ -7,6 +7,8 @@
 #include <variant>
 #include <vector>
 
+#include <QString>
+
 #define DB static_cast<DataBase&>(DataBase::instance())
 
 class DataBase
@@ -40,6 +42,9 @@ public:
                                             const std::string &additional_where = "",
                                             const std::string &order_by = "",
                                             int limit = -1);
+
+    bool exec(const QString &sql);
+
 private:
 
 
