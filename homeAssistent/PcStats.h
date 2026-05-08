@@ -17,6 +17,9 @@ public:
     ~PcStats();
 
 private:
+
+    //void updateTemp();
+
     Ui::PcStats *ui;
 
     QTimer* _update_timer;

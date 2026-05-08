@@ -60,8 +60,9 @@ Notes::Notes(QWidget *parent)
     }
 )");
 
+    // Create and add actions
 
-    connect (ui->add_row_btn, &QPushButton::pressed,
+    connect (ui->actionAdd_note, &QAction::triggered,
             this, [=](){
 
         AddNoteDialog dlg(this);
@@ -70,6 +71,9 @@ Notes::Notes(QWidget *parent)
             initTable();
         }
     });
+
+    connect (ui->add_row_btn, &QPushButton::clicked,
+            ui->actionAdd_note, &QAction::trigger);
 }
 
 Notes::~Notes() {
@@ -135,12 +139,11 @@ void Notes::initTable() {
 void Notes::showCustomMenu(const QPoint &pos) {
     QMenu contextMenu(tr("Context Menu"), this);
 
-    // Create and add actions
-    connect(ui->actionDelete_note, &QAction::triggered,
-                this, [this, pos](){deleteNote(pos);});
-
+    contextMenu.addAction(ui->actionAdd_note);
     contextMenu.addAction(ui->actionDelete_note);
 
+    connect(ui->actionDelete_note, &QAction::triggered,
+            this, [this, pos](){deleteNote(pos);});
     // Display the menu at the cursor's global position
     contextMenu.exec(this->mapToGlobal(pos));
 }

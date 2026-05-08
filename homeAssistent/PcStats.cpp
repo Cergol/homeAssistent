@@ -1,6 +1,8 @@
 #include "PcStats.h"
 #include "ui_PcStats.h"
 
+#include <QFile>
+
 PcStats::PcStats(QWidget *parent)
     : QWidget(parent)
     , ui(new Ui::PcStats)
@@ -12,3 +14,4 @@ PcStats::~PcStats()
 {
     delete ui;
 }
+

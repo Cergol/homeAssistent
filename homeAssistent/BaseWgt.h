@@ -17,6 +17,7 @@ public:
     explicit BaseWgt(const QString& name, QWidget *parent = nullptr);
     ~BaseWgt();
 
+    QString getModName() {return _wgt_name;}
 protected:
 
     QString _wgt_name;

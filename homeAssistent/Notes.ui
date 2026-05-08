@@ -86,6 +86,14 @@
     <enum>QAction::NoRole</enum>
    </property>
   </action>
+  <action name="actionAdd_note">
+   <property name="text">
+    <string>Add note</string>
+   </property>
+   <property name="menuRole">
+    <enum>QAction::NoRole</enum>
+   </property>
+  </action>
  </widget>
  <customwidgets>
   <customwidget>

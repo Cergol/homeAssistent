@@ -25,10 +25,10 @@ public:
     void setTimer(int time_ms);
     void updateWhether();
 
-    static const int MS2S;
 signals:
 
     void parseEnd();
+    void changeTimer(int);
 private slots:
 
     void showCustomMenu(const QPoint &pos);
@@ -43,20 +43,6 @@ private:
 
     Ui::WhetherWgt *ui;
     QTimer* _update_timer;
-};
-
-class ChangeTimer : public QDialog {
-    Q_OBJECT
-
-public:
-    ChangeTimer(QWidget* parent = nullptr);//:QDialog(parent) {;}
-    ~ChangeTimer(){;}
-
-    void setTimer(const int time);
-    int getTime();
-private:
-    QLabel *_lbl;
-    QDial *_timer_dial;
 };
 
 #endif // WHETHERWGT_H

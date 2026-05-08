@@ -12,8 +12,8 @@ set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 # Ищем Qt6 или Qt5
-find_package(QT NAMES Qt6 Qt5 REQUIRED COMPONENTS Widgets Network)
-find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Widgets Network LinguistTools)
+find_package(QT NAMES Qt6 Qt5 REQUIRED COMPONENTS Widgets Network Charts)
+find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Widgets Network LinguistTools Charts)
 
 # Ищем SQLite3
 find_package(SQLite3 REQUIRED)
@@ -45,11 +45,21 @@ else()
     add_executable(homeAssistent ${PROJECT_SOURCES}
         MonitorWgt.h MonitorWgt.cpp MonitorWgt.ui
         resources.qrc
+        GeneratorWgt.h GeneratorWgt.cpp GeneratorWgt.ui
+        ChangeTimer.h ChangeTimer.cpp ChangeTimer.ui
+        BarWgt.h BarWgt.cpp BarWgt.ui
         )
 
 endif()
 message(STATUS "Source files for translation: ${PROJECT_SOURCES}")
-qt_create_translation(QM_FILES ${PROJECT_SOURCES} translations/homeAssistent_ru.ts)
+
+
+set(TS_FILES
+    translations/homeAssistent_ru.ts
+)
+
+qt_create_translation(QM_FILES ${PROJECT_SOURCES} ${TS_FILES})
+qt_add_translation(QM_FILES ${TS_FILES})
 
 # Подключаем основные библиотеки
 target_link_libraries(homeAssistent PRIVATE

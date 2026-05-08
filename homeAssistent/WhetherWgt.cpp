@@ -11,7 +11,8 @@
 #include <QtConcurrent/QtConcurrent>
 #include <QPushButton>
 
-const int WhetherWgt::MS2S = 60 * 1000;
+#include "ChangeTimer.h"
+
 
 WhetherWgt::WhetherWgt(QWidget *parent)
     : BaseWgt(tr("Whether"), parent)
@@ -31,11 +32,14 @@ WhetherWgt::WhetherWgt(QWidget *parent)
     connect (ui->actionUpdate_timer, &QAction::triggered,
             this, [=](){
 
-                ChangeTimer dlg;
-                dlg.setTimer(_update_timer->interval() / MS2S);
+                ChangeTimer dlg(5, 60);
+                dlg.setTimer(_update_timer->interval());
                 if (dlg.exec()) {
 
-                    setTimer(dlg.getTime() * MS2S);
+                    int mult, time;
+                    time = dlg.getTime(mult);
+                    setTimer(time * mult);
+                    emit changeTimer(time);
                 }
             });
 
@@ -142,44 +146,4 @@ void WhetherWgt::parsePage(const QString& html_page) {
         }
         emit parseEnd();
     });
-}
-
-ChangeTimer::ChangeTimer(QWidget *parent):
-    QDialog(parent) {
-
-    setWindowTitle(tr("Change timer"));
-
-    _timer_dial = new QDial(this);
-    _timer_dial->setRange(5, 60);
-    _timer_dial->setNotchesVisible(true);
-    _timer_dial->setWrapping(true);
-
-    _lbl = new QLabel(this);
-    _lbl->setAlignment(Qt::AlignHCenter);
-
-    connect (_timer_dial, &QDial::valueChanged,
-            this, [=](int value){ _lbl->setText(QString::number(value) + " miutes");});
-
-    QVBoxLayout *lay = new QVBoxLayout(this);
-    lay->addWidget(_lbl);
-    lay->addWidget(_timer_dial);
-
-    QPushButton *button = new QPushButton(tr("Apply"), this);
-    lay->addWidget(button);
-
-    connect (button, &QPushButton::pressed, this, &QDialog::accept);
-    setLayout(lay);
-
-    //resize()
-}
-
-void ChangeTimer::setTimer(const int time) {
-
-    if(_timer_dial) _timer_dial->setValue(time);
-}
-
-int ChangeTimer::getTime() {
-
-    if(_timer_dial) return _timer_dial->value();
-    return 0;
 }
