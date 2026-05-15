@@ -4,7 +4,7 @@
 #include <QWidget>
 
 
-#include "BaseWgt.h"
+#include "./BaseWgt/BaseWgt.h"
 
 namespace Ui {
 class MonitorWgt;

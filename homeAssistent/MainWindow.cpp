@@ -1,6 +1,5 @@
 #include "MainWindow.h"
 #include "./ui_MainWindow.h"
-#include "ChangeTimer.h"
 
 #include <QSettings>
 
@@ -21,6 +20,7 @@ MainWindow::MainWindow(QWidget *parent)
     _whether_wgt = new WhetherWgt();
     _monitor_wgt = new MonitorWgt();
     _generator_wgt = new GeneratorWgt();
+    _zont_wgt = new ZontWgt();
 
     int wether_timer, generator_timer;
 
@@ -58,9 +58,11 @@ MainWindow::MainWindow(QWidget *parent)
     ui->main_layout->addWidget(_whether_wgt, 1, 0);
     ui->main_layout->addWidget(_monitor_wgt, 1, 1);
     ui->main_layout->addWidget(_generator_wgt, 2, 0, 1, 2);
+    ui->main_layout->addWidget(_zont_wgt, 3, 0, 1, 2);
 }
 
 MainWindow::~MainWindow()
 {
     delete ui;
+    delete _zont_wgt;
 }

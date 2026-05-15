@@ -8,7 +8,8 @@
 #include <QDialog>
 #include <QLabel>
 
-#include "BaseWgt.h"
+#include "./BaseWgt/BaseWgt.h"
+#include "./BaseWgt/ChangeTimer.h"
 
 namespace Ui {
 class WhetherWgt;

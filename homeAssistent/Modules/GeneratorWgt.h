@@ -6,7 +6,7 @@
 #include <QMutex>
 #include <QString>
 
-#include "BaseWgt.h"
+#include "./BaseWgt/BaseWgt.h"
 
 #include <random>
 

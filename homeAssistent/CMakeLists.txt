@@ -24,15 +24,26 @@ set(PROJECT_SOURCES
     MainWindow.cpp
     MainWindow.h
     MainWindow.ui
+
+    BaseWgt/DataBase.h
+    BaseWgt/DataBase.cpp
+    BaseWgt/BaseWgt.h
+    BaseWgt/BaseWgt.cpp
+    BaseWgt/BaseWgt.ui
+    BaseWgt/ChangeTimer.h
+    BaseWgt/ChangeTimer.cpp
+    BaseWgt/ChangeTimer.ui
 )
 
 # Дополнительные файлы интерфейса (только для ПК)
 list(APPEND PROJECT_SOURCES
-    Notes.h Notes.cpp Notes.ui
-    WhetherWgt.h WhetherWgt.cpp WhetherWgt.ui
-    PcStats.h PcStats.cpp PcStats.ui
-    DataBase.h DataBase.cpp
-    BaseWgt.h BaseWgt.cpp BaseWgt.ui
+    Modules/Notes.h Modules/Notes.cpp Modules/Notes.ui
+    Modules/WhetherWgt.h Modules/WhetherWgt.cpp Modules/WhetherWgt.ui
+    Modules/PcStats.h Modules/PcStats.cpp Modules/PcStats.ui
+    Modules/MonitorWgt.h Modules/MonitorWgt.cpp Modules/MonitorWgt.ui
+    Modules/GeneratorWgt.h Modules/GeneratorWgt.cpp Modules/GeneratorWgt.ui
+    Modules/BarWgt.h Modules/BarWgt.cpp Modules/BarWgt.ui
+    Modules/ZontWgt.h Modules/ZontWgt.cpp Modules/ZontWgt.ui
 )
 
 # Создаём исполняемый файл
@@ -43,11 +54,7 @@ if(Qt6_FOUND OR QT_VERSION_MAJOR GREATER_EQUAL 6)
     )
 else()
     add_executable(homeAssistent ${PROJECT_SOURCES}
-        MonitorWgt.h MonitorWgt.cpp MonitorWgt.ui
         resources.qrc
-        GeneratorWgt.h GeneratorWgt.cpp GeneratorWgt.ui
-        ChangeTimer.h ChangeTimer.cpp ChangeTimer.ui
-        BarWgt.h BarWgt.cpp BarWgt.ui
         )
 
 endif()

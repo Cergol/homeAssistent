@@ -19,7 +19,7 @@
   <customwidget>
    <class>BaseWgt</class>
    <extends>QWidget</extends>
-   <header>BaseWgt.h</header>
+   <header>BaseWgt/BaseWgt.h</header>
    <container>1</container>
   </customwidget>
  </customwidgets>

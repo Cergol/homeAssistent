@@ -73,7 +73,7 @@
   </layout>
   <action name="actionDelete_note">
    <property name="icon">
-    <iconset resource="resources.qrc">
+    <iconset resource="../resources.qrc">
      <normaloff>:/notes/imgs/tresh.png</normaloff>:/notes/imgs/tresh.png</iconset>
    </property>
    <property name="text">
@@ -99,12 +99,12 @@
   <customwidget>
    <class>BaseWgt</class>
    <extends>QGroupBox</extends>
-   <header>BaseWgt.h</header>
+   <header>BaseWgt/BaseWgt.h</header>
    <container>1</container>
   </customwidget>
  </customwidgets>
  <resources>
-  <include location="resources.qrc"/>
+  <include location="../resources.qrc"/>
  </resources>
  <connections/>
 </ui>

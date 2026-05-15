@@ -13,7 +13,7 @@
 #include <QComboBox>
 #include <QStyledItemDelegate>
 
-#include "BaseWgt.h"
+#include "./BaseWgt/BaseWgt.h"
 
 namespace Ui {
 class Notes;
@@ -67,17 +67,13 @@ public:
     const QMap <NOTES_TABLE, QString> _headers_name;
 private slots:
 
-           void showCustomMenu(const QPoint &pos);
+    void showCustomMenu(const QPoint &pos);
 private:
 
     void deleteNote(const QPoint &pos);
 
     QStandardItemModel* _model;
     Ui::Notes *ui;
-
-    //QTableView *_table;
-    //QTableWidget *_table;
-    //QTab
 };
 
 #endif // NOTES_H

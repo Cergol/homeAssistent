@@ -3,7 +3,7 @@
 
 #include <QMenu>
 
-#include "ChangeTimer.h"
+#include "./BaseWgt/ChangeTimer.h"
 
 GeneratorWgt::GeneratorWgt(QWidget *parent)
     : BaseWgt(tr("Generator"), parent)

@@ -1,6 +1,6 @@
 #include "Notes.h"
 #include "ui_Notes.h"
-#include "DataBase.h"
+#include "./BaseWgt/DataBase.h"
 
 #include <QTableWidget>
 #include <QFormLayout>

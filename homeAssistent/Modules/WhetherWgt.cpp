@@ -7,12 +7,8 @@
 #include <QDebug>
 #include <QRegularExpression>
 #include <QDateTime>
-#include <QMenu>
 #include <QtConcurrent/QtConcurrent>
 #include <QPushButton>
-
-#include "ChangeTimer.h"
-
 
 WhetherWgt::WhetherWgt(QWidget *parent)
     : BaseWgt(tr("Whether"), parent)

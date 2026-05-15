@@ -4,7 +4,7 @@
 #include <QTranslator>
 #include <iostream>
 
-#include "DataBase.h"
+#include "./BaseWgt/DataBase.h"
 
 int main(int argc, char *argv[])
 {

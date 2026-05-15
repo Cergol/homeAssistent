@@ -4,6 +4,7 @@
 #include <QGroupBox>
 #include <QVBoxLayout>
 #include <QFrame>
+#include <QMenu>
 
 namespace Ui {
 class BaseWgt;

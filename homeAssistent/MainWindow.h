@@ -3,10 +3,12 @@
 
 #include <QMainWindow>
 
-#include "Notes.h"
-#include "WhetherWgt.h"
-#include "MonitorWgt.h"
-#include "GeneratorWgt.h"
+#include "./Modules/Notes.h"
+#include "./Modules/WhetherWgt.h"
+#include "./Modules/MonitorWgt.h"
+#include "./Modules/GeneratorWgt.h"
+#include "./Modules/ZontWgt.h"
+#include "./BaseWgt/ChangeTimer.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui {
@@ -33,5 +35,6 @@ private:
     WhetherWgt* _whether_wgt;
     MonitorWgt* _monitor_wgt;
     GeneratorWgt* _generator_wgt;
+    ZontWgt* _zont_wgt;
 };
 #endif // MAINWINDOW_H

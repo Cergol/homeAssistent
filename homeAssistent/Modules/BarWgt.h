@@ -4,7 +4,7 @@
 #include <QWidget>
 #include <QtCharts/QChart>
 
-#include "BaseWgt.h"
+#include "./BaseWgt/BaseWgt.h"
 
 namespace Ui {
 class BarWgt;
@@ -20,7 +20,7 @@ public:
 
 private:
     Ui::BarWgt *ui;
-    QtCharts::QChart *_bar;
+    //QtCharts::QChart *_bar;
 };
 
 #endif // BARWGT_H

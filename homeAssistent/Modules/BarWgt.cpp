@@ -7,11 +7,11 @@ BarWgt::BarWgt(QWidget *parent)
 {
     ui->setupUi(this);
 
-    _bar = new QtCharts::QChart();
+    //_bar = new QtCharts::QChart();
 }
 
 BarWgt::~BarWgt()
 {
-    delete _bar;
+    //delete _bar;
     delete ui;
 }
